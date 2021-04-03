@@ -1,15 +1,26 @@
 <script>
-  import { onMount } from "svelte";
   import * as d3 from "d3";
+  import Pyramid from "./Pyramid.svelte";
 
-  const dataset = d3
-    .json(
-      "https://raw.githubusercontent.com/GabrielSuassuna/dropout-visualization/master/data/data.json?token=AIYBXOUMBRZ6DJ6PZMAAGC3AOFQCY#"
-    )
-    .then((data) => console.log(data));
+  async function getData() {
+    const data = await d3.csv(
+      "https://raw.githubusercontent.com/GabrielSuassuna/dropout-visualization/master/data/data.csv?token=AIYBXOUHMZUV3ANMLGBMCD3AOFRTQ"
+    );
+
+    return data;
+  }
+  let promise = getData();
 </script>
 
-<main />
+<main>
+  {#await promise}
+    <p>...waiting</p>
+  {:then dataset}
+    <Pyramid {dataset} />
+  {:catch error}
+    <p style="color: red">{error.message}</p>
+  {/await}
+</main>
 
 <style>
   main {
@@ -17,13 +28,6 @@
     padding: 1em;
     max-width: 240px;
     margin: 0 auto;
-  }
-
-  h1 {
-    color: #ff3e00;
-    text-transform: uppercase;
-    font-size: 4em;
-    font-weight: 100;
   }
 
   @media (min-width: 640px) {
