@@ -416,7 +416,7 @@ d3-zoom@2:
     d3-selection "2"
     d3-transition "2"
 
-d3@^6.6.2:
+d3@^6.5.0, d3@^6.6.2:
   version "6.6.2"
   resolved "https://registry.yarnpkg.com/d3/-/d3-6.6.2.tgz#5d2133298b7adbf065d8274b77b36b429f6da3ee"
   integrity sha512-wvC9cZe05bUCo00VFKXLQJWmWhGv0U43Qv0gn+tkl144S7bV22E80Gnp06BEuJVuwVfa6+S8UOfl8H9Ru/cmgA==
@@ -451,6 +451,13 @@ d3@^6.6.2:
     d3-timer "2"
     d3-transition "2"
     d3-zoom "2"
+
+dc@^4.2.5:
+  version "4.2.5"
+  resolved "https://registry.yarnpkg.com/dc/-/dc-4.2.5.tgz#64ff3daf51e7338f2b46a9281232238c8432579c"
+  integrity sha512-xFrx1IM6yFn0Ze7TPOEg5/zlKju8VT78UY/Ifxgrpcd7YEFE60IzDb6BZAeIV97nekrAUasDX/qoQuV8K/wSog==
+  dependencies:
+    d3 "^6.5.0"
 
 deepmerge@^4.2.2:
   version "4.2.2"

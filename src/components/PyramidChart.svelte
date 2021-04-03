@@ -58,7 +58,6 @@
         sex: d.key.split("/")[2] === "2" ? "M" : "F",
         value: d.value,
       });
-    } else {
     }
   });
 
@@ -91,7 +90,9 @@
   const percentage = (d) => d / totalPopulation;
 
   const maxValue =
-    Math.ceil(d3.max(data, (d) => percentage(d.value)) / 0.05) * 0.05;
+    Math.ceil(d3.max(data, (d) => percentage(d.value)) * 100) / 100;
+
+  console.log(maxValue);
 
   var xScale = d3
     .scaleLinear()

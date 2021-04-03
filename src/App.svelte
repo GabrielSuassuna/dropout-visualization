@@ -1,6 +1,7 @@
 <script>
   import * as d3 from "d3";
-  import Pyramid from "./Pyramid.svelte";
+  import BarChart from "./components/BarChart.svelte";
+  import Pyramid from "./components/PyramidChart.svelte";
 
   async function getData() {
     const data = await d3.csv(
@@ -17,6 +18,7 @@
     <p>...waiting</p>
   {:then dataset}
     <Pyramid {dataset} />
+    <BarChart {dataset} />
   {:catch error}
     <p style="color: red">{error.message}</p>
   {/await}
