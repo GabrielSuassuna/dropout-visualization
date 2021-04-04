@@ -3,7 +3,7 @@
   import * as dc from "dc";
   import crossfilter from "crossfilter2";
 
-  export let dataset;
+  export let facts;
 
   let title = "Cursos com maior número de evasão - UFPE";
 
@@ -21,8 +21,6 @@
     "#24e793",
     "#39f279",
   ];
-
-  const facts = crossfilter(dataset);
 
   const cursosDim = facts.dimension((d) => d.NO_CURSO);
 
@@ -48,7 +46,7 @@
       .othersGrouper(false)
       .cap(10);
 
-    rowChart.render();
+    dc.renderAll();
   });
 </script>
 

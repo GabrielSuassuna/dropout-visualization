@@ -3,7 +3,7 @@
   import * as d3 from "d3";
   import crossfilter from "crossfilter2";
 
-  export let dataset;
+  export let facts;
 
   function colorTransform(c1, c2) {
     const color1 = c1.replace("#", "");
@@ -39,8 +39,6 @@
   function prettyFormat(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   }
-
-  const facts = crossfilter(dataset);
 
   const pyramidDim = facts.dimension(
     (d) => d.NU_ANO_CENSO + "/" + d.NU_IDADE + "/" + d.TP_SEXO
