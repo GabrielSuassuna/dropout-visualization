@@ -11,7 +11,11 @@
       "https://raw.githubusercontent.com/GabrielSuassuna/dropout-visualization/master/data/data.csv?token=AIYBXOUHMZUV3ANMLGBMCD3AOFRTQ"
     );
 
-    return crossfilter(data);
+    const geojson = await d3.json(
+      "https://raw.githubusercontent.com/luamzi/Data-Visualization/main/data/brazil_geo.json"
+    );
+
+    return [crossfilter(data), geojson];
   }
   let promise = getData();
 </script>
@@ -19,11 +23,11 @@
 <main>
   {#await promise}
     <p>...waiting</p>
-  {:then facts}
-    <Pyramid {facts} />
-    <BarChart {facts} />
-    <LineChart {facts} />
-    <MapChart {facts} />
+  {:then data}
+    <Pyramid facts={data[0]} />
+    <BarChart facts={data[0]} />
+    <LineChart facts={data[0]} />
+    <MapChart facts={data[0]} geoJsonData={data[1]} />
   {:catch error}
     <p style="color: red">{error.message}</p>
   {/await}
