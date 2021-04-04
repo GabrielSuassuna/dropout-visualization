@@ -72,7 +72,6 @@
     }
 
     function style(feature) {
-      console.log(evasionMap);
       return {
         weight: 1,
         opacity: 1,
