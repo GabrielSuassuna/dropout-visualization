@@ -1,32 +1,24 @@
 <script>
   import { onMount } from "svelte";
   import * as dc from "dc";
-  import crossfilter from "crossfilter2";
+  import * as d3 from "d3";
 
-  export let facts;
+  export let cursosDim;
+  export let update;
 
   let title = "Cursos com maior número de evasão - UFPE";
 
   const width = 600;
 
-  const colors = [
-    "#6e40aa",
-    "#6450c2",
-    "#5564d5",
-    "#447adf",
-    "#3292e1",
-    "#23abd8",
-    "#1ac3c7",
-    "#1ad7af",
-    "#24e793",
-    "#39f279",
-  ];
-
-  const cursosDim = facts.dimension((d) => d.NO_CURSO);
-
   const cursoGroup = cursosDim.group();
 
-  console.log(cursoGroup.all());
+  const createOrdinalColors = (bins) => {
+    const scheme = new Array(bins);
+    for (let i = bins; i >= 0; i--) {
+      scheme[i] = d3.interpolateBlues(i / bins / 2 + 0.5);
+    }
+    return scheme;
+  };
 
   let el;
 
@@ -37,8 +29,8 @@
       .width(width - 100)
       .height(400)
       .dimension(cursosDim)
-      .group(cursoGroup, "Curso")
-      .ordinalColors(colors)
+      .group(cursoGroup)
+      .ordinalColors(createOrdinalColors(10))
       .elasticX(true)
       .ordering(function (d) {
         return -d.value;
@@ -46,7 +38,9 @@
       .othersGrouper(false)
       .cap(10);
 
-    dc.renderAll();
+    rowChart.on("filtered", (_, type) => update());
+
+    rowChart.render();
   });
 </script>
 

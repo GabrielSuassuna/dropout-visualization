@@ -3,8 +3,7 @@
   import * as dc from "dc";
   import * as d3 from "d3";
 
-  export let yearDim;
-  export let sitDim;
+  export let perfomanceDim;
 
   let title = "Taxas de evasão por ano - UFPE";
 
@@ -17,22 +16,20 @@
   let el;
 
   afterUpdate(() => {
-    let timeLineChart = dc.lineChart(el);
+    let scatterPlotChart = dc.ScatterPlot(el);
 
-    timeLineChart
-      .width(800)
-      .height(300)
-      .margins({ top: 10, right: 10, bottom: 20, left: 40 })
-      .dimension(yearDim)
-      .group(yearGroup)
-      .x(xScale)
-      .elasticY(true)
-      .renderArea(false)
-      .renderDataPoints(true)
+    scatterPlotChart
+      .width(768)
+      .height(480)
+      .x(d3.scaleLinear().domain([6, 20]))
+      .brushOn(false)
+      .symbolSize(8)
       .clipPadding(10)
-      .brushOn(true);
+      .yAxisLabel("This is the Y Axis!")
+      .dimension(runDimension)
+      .group(speedSumGroup);
 
-    timeLineChart.render();
+    scatterPlotChart.render();
   });
 </script>
 

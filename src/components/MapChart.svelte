@@ -1,27 +1,35 @@
 <script>
   import { onMount } from "svelte";
-  import * as dc from "dc";
   import * as d3 from "d3";
-  import crossfilter from "crossfilter2";
   import * as L from "leaflet";
 
-  export let facts;
+  export let ufDim;
   export let geoJsonData;
 
-  let title = "Taxas de evasão por ano - UFPE";
+  let title = "Taxas de Evasão por Estado - UFPE";
 
-  const UFDim = facts.dimension((d) => d.UF);
+  const evasionByUFGroup = ufDim.group();
 
-  const evasionByUFGroup = UFDim.group();
+  const evasionTotal = ufDim.top(Infinity).length;
 
-  console.log(evasionByUFGroup.all());
+  const colorScheme = d3.schemeYlOrBr[5];
 
-  const colorScheme = d3.schemeYlOrBr[7];
-
-  const colorScale = d3.scaleQuantize().domain([0, 426]).range(colorScheme);
+  const colorScale = d3
+    .scaleQuantize()
+    .domain([
+      0,
+      0.025,
+      d3.max(evasionByUFGroup.all(), (d) => d.value / evasionTotal),
+    ])
+    .range(colorScheme);
 
   let evasionMap = new Map();
-  evasionByUFGroup.all().forEach((d) => evasionMap.set(d.key, d.value));
+  evasionByUFGroup
+    .all()
+    .forEach((d) => evasionMap.set(d.key, d.value / evasionTotal));
+
+  let evasionAbsMap = new Map();
+  evasionByUFGroup.all().forEach((d) => evasionAbsMap.set(d.key, d.value));
 
   onMount(() => {
     let map = L.map("mapid").setView([-15.5002199999999, -48.036034], 4);
@@ -36,7 +44,6 @@
 
     function highlightFeature(e) {
       let layer = e.target;
-      //console.log(e.target)
 
       layer.setStyle({
         weight: 2,
@@ -103,9 +110,10 @@
           '<i style="background:' +
             colorScheme[i] +
             '"></i> ' +
-            d3.format("d")(fromto[0]) +
-            (d3.format("d")(fromto[1])
-              ? "&ndash;" + d3.format("d")(fromto[1])
+            d3.format(".2f")(fromto[0] * 100) +
+            "% " +
+            (d3.format(".2f")(fromto[1] * 100)
+              ? "&ndash;" + d3.format(".2f")(fromto[1] * 100) + "%"
               : "+")
         );
       }
@@ -126,14 +134,16 @@
 
     info.update = function (feat) {
       this._div.innerHTML =
-        "<h5>Número de homicídios</h5>" +
+        "<h3>Taxa de evasão por estado</h3>" +
         (feat
           ? "<b>" +
-            feat.properties.NOME +
-            "</b><br />" +
-            evasionMap.get(feat.properties.UF) +
-            " homicídios/100000 hab."
-          : "Passe o mouse sobre um bairro");
+            feat.properties.name +
+            "</b><br /> Taxa de evasão: " +
+            d3.format(".2f")(evasionMap.get(feat.id) * 100) +
+            " % " +
+            "</b><br /> Total de alunos: " +
+            evasionAbsMap.get(feat.id)
+          : "Passe o mouse sobre um estado");
     };
 
     info.addTo(map);
@@ -142,7 +152,7 @@
 
 <div role="main" class="container">
   <div class="row">
-    <h3>Homicídios em Fortaleza em 2012</h3>
+    <h3>{title}</h3>
   </div>
   <div id="mapid" class="row" />
   <p>

@@ -1,9 +1,8 @@
 <script>
-  import { onMount } from "svelte";
+  import { afterUpdate, onMount } from "svelte";
   import * as d3 from "d3";
-  import crossfilter from "crossfilter2";
 
-  export let facts;
+  export let data;
 
   function colorTransform(c1, c2) {
     const color1 = c1.replace("#", "");
@@ -40,27 +39,6 @@
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   }
 
-  const pyramidDim = facts.dimension(
-    (d) => d.NU_ANO_CENSO + "/" + d.NU_IDADE + "/" + d.TP_SEXO
-  );
-
-  const pyramidDimCount = pyramidDim.group().all();
-
-  const data = [];
-
-  pyramidDimCount.forEach((d) => {
-    if (Number(d.key.split("/")[1]) < 40) {
-      data.push({
-        year: Number(d.key.split("/")[0]),
-        age: Number(d.key.split("/")[1]),
-        sex: d.key.split("/")[2] === "2" ? "M" : "F",
-        value: d.value,
-      });
-    }
-  });
-
-  console.log(data);
-
   const margin = { top: 50, right: 10, bottom: 20, left: 10, middle: 20 };
 
   let height = 600;
@@ -90,25 +68,13 @@
   const maxValue =
     Math.ceil(d3.max(data, (d) => percentage(d.value)) * 100) / 100;
 
-  console.log(maxValue);
-
-  var xScale = d3
+  const xScale = d3
     .scaleLinear()
     .domain([0, maxValue])
     .range([0, sectorWidth - margin.middle])
     .nice();
 
-  var xScaleLeft = d3
-    .scaleLinear()
-    .domain([0, maxValue])
-    .range([sectorWidth, 0]);
-
-  var xScaleRight = d3
-    .scaleLinear()
-    .domain([0, maxValue])
-    .range([0, sectorWidth]);
-
-  var yScale = d3
+  const yScale = d3
     .scaleBand()
     .domain(
       data.map((d) => {
@@ -117,17 +83,17 @@
     )
     .range([height, 0], 0.1);
 
-  var yAxisLeft = d3
+  const yAxisLeft = d3
     .axisRight()
     .scale(yScale)
     .tickSize(4, 0)
     .tickPadding(margin.middle - 4);
 
-  var yAxisRight = d3.axisLeft().scale(yScale).tickSize(4, 0).tickFormat("");
+  const yAxisRight = d3.axisLeft().scale(yScale).tickSize(4, 0).tickFormat("");
 
-  var xAxisRight = d3.axisBottom().scale(xScale).tickFormat(d3.format(".0%"));
+  const xAxisRight = d3.axisBottom().scale(xScale).tickFormat(d3.format(".0%"));
 
-  var xAxisLeft = d3
+  const xAxisLeft = d3
     .axisBottom()
     // REVERSE THE X-AXIS SCALE ON THE LEFT SIDE BY REVERSING THE RANGE
     .scale(xScale.copy().range([leftBegin, 0]))
