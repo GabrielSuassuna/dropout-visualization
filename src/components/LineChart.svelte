@@ -1,28 +1,26 @@
 <script>
-  import { afterUpdate, onMount } from "svelte";
+  import { onMount } from "svelte";
   import * as dc from "dc";
   import * as d3 from "d3";
 
   export let yearDim;
-  export let sitDim;
 
-  let title = "Taxas de evasão por ano - UFPE";
+  let title = "Número de evasões de 2017 a 2019 - UFPE";
 
-  const yearGroup = yearDim.group();
+  const yearGroup = yearDim.group().reduceCount();
 
   const xScale = d3
-    .scaleLinear()
-    .domain(d3.extent(yearDim.top(Infinity), (d) => Number(d.NU_ANO_CENSO)));
+    .scaleTime()
+    .domain(d3.extent(yearDim.top(Infinity), (d) => d.NU_ANO_CENSO));
 
   let el;
 
-  afterUpdate(() => {
+  onMount(() => {
     let timeLineChart = dc.lineChart(el);
 
     timeLineChart
-      .width(800)
-      .height(300)
-      .margins({ top: 10, right: 10, bottom: 20, left: 40 })
+      .height(350)
+      .margins({ top: 10, right: 10, bottom: 40, left: 40 })
       .dimension(yearDim)
       .group(yearGroup)
       .x(xScale)
@@ -30,12 +28,14 @@
       .renderArea(false)
       .renderDataPoints(true)
       .clipPadding(10)
+      .yAxisLabel("Número de alunos")
+      .xAxisLabel("Ano")
       .brushOn(true);
 
     timeLineChart.render();
   });
 </script>
 
-<div bind:this={el} class="chart">
+<div bind:this={el}>
   <h3>{title}</h3>
 </div>

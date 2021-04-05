@@ -286,4 +286,6 @@
   });
 </script>
 
-<div bind:this={el} class="chart" />
+<div bind:this={el} class="col-6">
+  <h3>Pirâmide populacional dos alunos da UFPE desvinculados do curso</h3>
+</div>

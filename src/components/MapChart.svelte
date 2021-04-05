@@ -12,7 +12,7 @@
 
   const evasionTotal = ufDim.top(Infinity).length;
 
-  const colorScheme = d3.schemeYlOrBr[5];
+  const colorScheme = d3.schemeYlOrRd[5];
 
   const colorScale = d3
     .scaleQuantize()
@@ -150,19 +150,15 @@
   });
 </script>
 
-<div role="main" class="container">
-  <div class="row">
+<div role="main" class="col-6">
+  <div>
     <h3>{title}</h3>
   </div>
-  <div id="mapid" class="row" />
-  <p>
-    Dados retirados do site da <a href="http://www.sspds.ce.gov.br/">SSPDS</a>
-  </p>
+  <div id="mapid" />
 </div>
 
 <style>
   #mapid {
-    width: 740px;
     height: 590px;
   }
   :global(.info) {
