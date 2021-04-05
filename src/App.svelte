@@ -99,8 +99,6 @@
 
     pyramidData.push(plus40Female);
     pyramidData.push(plus40Male);
-    console.log(pyramidData);
-    console.log(2);
   };
 
   let promise = getData();
