@@ -1,7 +1,3 @@
-_Looking for a shareable component template? Go here --> [sveltejs/component-template](https://github.com/sveltejs/component-template)_
-
----
-
 # Grupo :bar_chart:
 
 1. Lua Pereira de Lima Brasil - 397743
